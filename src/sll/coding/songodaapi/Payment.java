@@ -104,6 +104,10 @@ public class Payment {
         return (long) data.get("updated_at");
     }
 
+    public String getReceipt() {
+        return "https://songoda.com/payment/receipt/" + getOrderNumber();
+    }
+
     private static JSONObject get(String url) {
         try {
             String baseUrl = "https://songoda.com/api";

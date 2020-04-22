@@ -43,6 +43,11 @@ public class Resource {
         return resources;
     }
 
+    public static Resource fromId(long id) {
+        JSONObject response = get("/v2/products/id/" + id);
+        return new Resource((JSONObject) response.get("data"));
+    }
+
     public long getId() {
         return (long) data.get("id");
     }
