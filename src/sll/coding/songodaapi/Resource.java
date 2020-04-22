@@ -18,10 +18,10 @@ public class Resource {
         this.data = data;
     }
 
-    @Deprecated
     public static List<Resource> fromName(String name) {
         List<Resource> resources = new ArrayList<>();
         JSONObject response = get("/v2/products?filter[name]=" + name + "&per_page=-1");
+        assert response != null;
         JSONArray array = (JSONArray) response.get("data");
         for (Object r : array) {
             resources.add(new Resource((JSONObject) r));
@@ -31,12 +31,14 @@ public class Resource {
 
     public static Resource fromSlug(String slug) {
         JSONObject response = get("/v2/products/" + slug.toLowerCase());
+        assert response != null;
         return new Resource((JSONObject) response.get("data"));
     }
 
     public static List<Resource> myResources(String apiKey) {
         List<Resource> resources = new ArrayList<>();
         JSONObject response = get("/dashboard/products?token=" + apiKey);
+        assert response != null;
         for (Object r : (JSONArray) response.get("data")) {
             resources.add(new Resource((JSONObject) r));
         }
@@ -45,6 +47,7 @@ public class Resource {
 
     public static Resource fromId(long id) {
         JSONObject response = get("/v2/products/id/" + id);
+        assert response != null;
         return new Resource((JSONObject) response.get("data"));
     }
 
@@ -69,11 +72,7 @@ public class Resource {
     }
 
     private boolean getOwnerType() {
-        if (data.get("team_id") == null) {
-            return true;
-        } else {
-            return false;
-        }
+        return data.get("team_id") == null;
     }
 
     public String getName() {
@@ -157,14 +156,24 @@ public class Resource {
 
     public ResourceType getType() {
         String clazz = (String) data.get("class");
-        if (clazz.equals("Plugin")) return ResourceType.PLUGIN;
-        else if (clazz.equals("Build")) return ResourceType.BUILD;
-        else if (clazz.equals("Config")) return ResourceType.CONFIG;
-        else if (clazz.equals("Skript")) return ResourceType.SKRIPT;
-        else if (clazz.equals("Schematic")) return ResourceType.SCHEMATIC;
-        else if (clazz.equals("Website")) return ResourceType.WEBSITE;
-        else if (clazz.equals("Libraries / APIs")) return ResourceType.LIBRARY;
-        else return ResourceType.UNKNOWN;
+        switch (clazz) {
+            case "Plugin":
+                return ResourceType.PLUGIN;
+            case "Build":
+                return ResourceType.BUILD;
+            case "Config":
+                return ResourceType.CONFIG;
+            case "Skript":
+                return ResourceType.SKRIPT;
+            case "Schematic":
+                return ResourceType.SCHEMATIC;
+            case "Website":
+                return ResourceType.WEBSITE;
+            case "Libraries / APIs":
+                return ResourceType.LIBRARY;
+            default:
+                return ResourceType.UNKNOWN;
+        }
     }
 
     public List<Jar> getJars() {
@@ -178,6 +187,7 @@ public class Resource {
     public List<Review> getReviewsList() {
         List<Review> reviewsList = new ArrayList<>();
         JSONObject reviewsRes = get("/products/" + getSlug() + "/reviews");
+        assert reviewsRes != null;
         for (Object r : (JSONArray) reviewsRes.get("data")) {
             reviewsList.add(new Review((JSONObject) r));
         }
@@ -208,9 +218,7 @@ public class Resource {
 
             JSONParser parser = new JSONParser();
 
-            JSONObject json = (JSONObject) parser.parse(output);
-
-            return json;
+            return (JSONObject) parser.parse(output);
         } catch (Exception e) {
             e.printStackTrace();
             return null;

@@ -21,6 +21,7 @@ public class Payment {
     public static List<Payment> fromUser(User user, String apiKey) {
         List<Payment> payments = new ArrayList<>();
         JSONObject response = get("/dashboard/payments?filter[username]=" + user.getName() + "&token=" + apiKey);
+        assert response != null;
         JSONArray array = (JSONArray) response.get("data");
         for (Object p : array) {
             payments.add(new Payment((JSONObject) p));
@@ -31,6 +32,7 @@ public class Payment {
     public static List<Payment> fromResource(Resource resource, String apiKey) {
         List<Payment> payments = new ArrayList<>();
         JSONObject response = get("/dashboard/payments?filter[product]=" + resource.getName() + "&token=" + apiKey);
+        assert response != null;
         JSONArray array = (JSONArray) response.get("data");
         for (Object p : array) {
             payments.add(new Payment((JSONObject) p));
