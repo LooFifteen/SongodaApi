@@ -6,7 +6,7 @@ public enum JarStatus {
     ALPHA("Alpha"),
     BETA("Beta");
 
-    private String string;
+    private final String string;
 
     JarStatus(String string) {
         this.string = string;
@@ -16,4 +16,5 @@ public enum JarStatus {
     public String toString() {
         return string;
     }
+
 }

@@ -12,7 +12,7 @@ import java.util.List;
 
 public class ResourceOwner {
 
-    protected JSONObject data;
+    protected final JSONObject data;
 
     protected ResourceOwner(JSONObject data) {
         this.data = data;

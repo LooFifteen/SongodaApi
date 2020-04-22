@@ -6,7 +6,7 @@ public enum ResourceStatus {
     PENDING("Pending"),
     DECLINED("Declined");
 
-    private String string;
+    private final String string;
 
     ResourceStatus(String string) {
         this.string = string;

@@ -11,7 +11,7 @@ public enum ResourceType {
     LIBRARY("Library / API"),
     UNKNOWN("Unknown");
 
-    private String string;
+    private final String string;
 
     ResourceType(String string) {
         this.string = string;

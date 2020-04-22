@@ -5,7 +5,7 @@ public enum OwnerType {
     USER("User"),
     TEAM("Team");
 
-    private String string;
+    private final String string;
 
     OwnerType(String string) {
         this.string = string;

@@ -8,7 +8,7 @@ import java.util.List;
 
 public class Post {
 
-    private JSONObject data;
+    private final JSONObject data;
 
     public Post(JSONObject data) {
         this.data = data;
