@@ -21,7 +21,7 @@ public class Resource {
     @Deprecated
     public static List<Resource> fromName(String name) {
         List<Resource> resources = new ArrayList<>();
-        JSONObject response = get("/v2/products?filter[name]=" + name + "?per_page=-1");
+        JSONObject response = get("/v2/products?filter[name]=" + name + "&per_page=-1");
         JSONArray array = (JSONArray) response.get("data");
         for (Object r : array) {
             resources.add(new Resource((JSONObject) r));
