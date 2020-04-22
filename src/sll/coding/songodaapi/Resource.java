@@ -21,7 +21,7 @@ public class Resource {
     @Deprecated
     public static List<Resource> fromName(String name) {
         List<Resource> resources = new ArrayList<>();
-        JSONObject response = get("/products?filter[name]=" + name + "?per_page=-1");
+        JSONObject response = get("/v2/products?filter[name]=" + name + "?per_page=-1");
         JSONArray array = (JSONArray) response.get("data");
         for (Object r : array) {
             resources.add(new Resource((JSONObject) r));
@@ -30,7 +30,7 @@ public class Resource {
     }
 
     public static Resource fromSlug(String slug) {
-        JSONObject response = get("/products/" + slug.toLowerCase());
+        JSONObject response = get("/v2/products/" + slug.toLowerCase());
         return new Resource((JSONObject) response.get("data"));
     }
 
@@ -99,9 +99,12 @@ public class Resource {
         return (String) data.get("banner");
     }
 
-    @Deprecated
-    public String getBody() {
-        return (String) data.get("body");
+    public String getBodyBBCode() {
+        return (String) ((JSONObject) data.get("body")).get("bbcode");
+    }
+
+    public String getBodyHTML() {
+        return (String) ((JSONObject) data.get("body")).get("html");
     }
 
     public String getCurrency() {

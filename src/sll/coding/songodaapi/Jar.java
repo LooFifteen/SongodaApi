@@ -67,4 +67,16 @@ public class Jar {
         return (String) data.get("download");
     }
 
+    public String getChangelogPlain() {
+        return (String) ((JSONObject) data.get("changlog")).get("plain");
+    }
+
+    public String getChangelogBBCode() {
+        return (String) ((JSONObject) data.get("changlog")).get("bbcode");
+    }
+
+    public String getChangelogHTML() {
+        return (String) ((JSONObject) data.get("changlog")).get("html");
+    }
+
 }
