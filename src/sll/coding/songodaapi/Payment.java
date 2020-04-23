@@ -19,9 +19,9 @@ public class Payment {
         this.data = data;
     }
 
-    public static List<Payment> fromUser(User user, String apiKey) throws IOException {
+    public static List<Payment> fromUser(User user, String apiKey, int limit) throws IOException {
         List<Payment> payments = new ArrayList<>();
-        JSONObject response = get("/dashboard/payments?filter[username]=" + user.getName() + "&token=" + apiKey);
+        JSONObject response = get("/dashboard/payments?filter[username]=" + user.getName() + "&token=" + apiKey + "&per_page=" + limit);
         assert response != null;
         JSONArray array = (JSONArray) response.get("data");
         for (Object p : array) {
@@ -30,9 +30,9 @@ public class Payment {
         return payments;
     }
 
-    public static List<Payment> fromResource(Resource resource, String apiKey) throws IOException {
+    public static List<Payment> fromResource(Resource resource, String apiKey, int limit) throws IOException {
         List<Payment> payments = new ArrayList<>();
-        JSONObject response = get("/dashboard/payments?filter[product]=" + resource.getName() + "&token=" + apiKey);
+        JSONObject response = get("/dashboard/payments?filter[product]=" + resource.getName() + "&token=" + apiKey + "&per_page=" + limit);
         assert response != null;
         JSONArray array = (JSONArray) response.get("data");
         for (Object p : array) {
@@ -51,7 +51,7 @@ public class Payment {
 
     public Resource getResource() throws IOException {
         String name = (String) data.get("product");
-        List<Resource> resources = Resource.fromName(name);
+        List<Resource> resources = Resource.fromName(name, -1);
         for (Resource r : resources) {
             if (r.getName().equals(name)) {
                 return r;
@@ -90,7 +90,7 @@ public class Payment {
 
     public User getUser() throws IOException {
         String username = (String) data.get("username");
-        List<User> users = User.fromName(username);
+        List<User> users = User.fromName(username, -1);
         for (User user : users) {
             if (user.getName().equals(username)) {
                 return user;

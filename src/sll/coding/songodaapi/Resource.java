@@ -19,9 +19,9 @@ public class Resource {
         this.data = data;
     }
 
-    public static List<Resource> fromName(String name) throws IOException {
+    public static List<Resource> fromName(String name, int limit) throws IOException {
         List<Resource> resources = new ArrayList<>();
-        JSONObject response = get("/v2/products?filter[name]=" + name + "&per_page=-1");
+        JSONObject response = get("/v2/products?filter[name]=" + name + "&per_page=" + limit);
         assert response != null;
         JSONArray array = (JSONArray) response.get("data");
         for (Object r : array) {
@@ -36,9 +36,9 @@ public class Resource {
         return new Resource((JSONObject) response.get("data"));
     }
 
-    public static List<Resource> myResources(String apiKey) throws IOException {
+    public static List<Resource> myResources(String apiKey, int limit) throws IOException {
         List<Resource> resources = new ArrayList<>();
-        JSONObject response = get("/dashboard/products?token=" + apiKey);
+        JSONObject response = get("/dashboard/products?token=" + apiKey + "&per_page=" + limit);
         assert response != null;
         for (Object r : (JSONArray) response.get("data")) {
             resources.add(new Resource((JSONObject) r));
@@ -58,7 +58,7 @@ public class Resource {
 
     public ResourceOwner getOwner() throws IOException {
         if (getOwnerType()) {
-            return getVersions().get(0).getUploadedBy();
+            return User.fromId(getOwnerId());
         } else {
             return Team.fromId(getOwnerId());
         }
@@ -196,7 +196,7 @@ public class Resource {
     }
 
     public List<Payment> getPayments(String apiKey) throws IOException {
-        return Payment.fromResource(this, apiKey);
+        return Payment.fromResource(this, apiKey, -1);
     }
 
     private static JSONObject get(String url) throws IOException {

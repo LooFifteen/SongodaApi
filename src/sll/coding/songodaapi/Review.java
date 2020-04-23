@@ -18,7 +18,7 @@ public class Review {
     }
 
     public User getReviewer() throws IOException {
-        List<User> users = User.fromName((String) data.get("reviewer"));
+        List<User> users = User.fromName((String) data.get("reviewer"), -1);
         for (User user : users) {
             if (user.getName().equals(data.get("reviewer"))) {
                 return user;

@@ -13,9 +13,9 @@ public class User extends ResourceOwner {
         super(data);
     }
 
-    public static List<User> fromName(String name) throws IOException {
+    public static List<User> fromName(String name, int limit) throws IOException {
         List<User> users = new ArrayList<>();
-        JSONObject response = get("/v2/profiles?filter[name]=" + name);
+        JSONObject response = get("/v2/profiles?filter[name]=" + name + "&per_page=" + limit);
         assert response != null;
         for (Object u : (JSONArray) response.get("data")) {
             users.add(new User((JSONObject) u));

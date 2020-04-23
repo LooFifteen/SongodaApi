@@ -40,7 +40,7 @@ public class Version {
 
     public User getUploadedBy() throws IOException {
         String name = (String) data.get("uploaded_by");
-        for (User user : User.fromName(name)) {
+        for (User user : User.fromName(name, -1)) {
             if (user.getName().equals(name)) {
                 return user;
             }
