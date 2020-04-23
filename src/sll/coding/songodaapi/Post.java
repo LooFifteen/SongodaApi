@@ -3,6 +3,7 @@ package sll.coding.songodaapi;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +19,7 @@ public class Post {
         return (long) data.get("id");
     }
 
-    public User getAuthor() {
+    public User getAuthor() throws IOException {
         return User.fromSlug((String) ((JSONObject) data.get("author")).get("slug"));
     }
 

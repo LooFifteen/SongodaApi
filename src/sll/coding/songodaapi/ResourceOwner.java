@@ -3,6 +3,7 @@ package sll.coding.songodaapi;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -50,7 +51,7 @@ public class ResourceOwner {
         return (String) data.get("support");
     }
 
-    public List<Resource> getResources() {
+    public List<Resource> getResources() throws IOException {
         List<Resource> resources = new ArrayList<>();
         for (Object r : (JSONArray) data.get("products")) {
             JSONObject resource = (JSONObject) r;
@@ -68,29 +69,28 @@ public class ResourceOwner {
         }
     }
 
-    protected static JSONObject get(String url) {
-        try {
-            String baseUrl = "https://songoda.com/api";
-            URL url1 = new URL(baseUrl + url.replaceAll(" ", "%20"));
-            HttpURLConnection connection = (HttpURLConnection) url1.openConnection();
-            connection.setRequestMethod("GET");
-            connection.setRequestProperty("Accept", "application/json");
-            connection.setRequestProperty("User-Agent", "PostmanRuntime/7.24.0");
+    static JSONObject get(String url) throws IOException {
+        String baseUrl = "https://songoda.com/api";
+        URL url1 = new URL(baseUrl + url.replaceAll(" ", "%20"));
+        HttpURLConnection connection = (HttpURLConnection) url1.openConnection();
+        connection.setRequestMethod("GET");
+        connection.setRequestProperty("Accept", "application/json");
+        connection.setRequestProperty("User-Agent", "PostmanRuntime/7.24.0");
 
-            if (connection.getResponseCode() != 200) {
-                throw new IOException("Failed: Error code " + connection.getResponseCode());
-            }
-
-            InputStream in = new BufferedInputStream(connection.getInputStream());
-            String output = convertStreamToString(in);
-
-            connection.disconnect();
-
-            JSONParser parser = new JSONParser();
-
-            return (JSONObject) parser.parse(output);
+        if (connection.getResponseCode() != 200) {
+            throw new IOException("Failed: Error code " + connection.getResponseCode());
         }
-        catch (Exception e) {
+
+        InputStream in = new BufferedInputStream(connection.getInputStream());
+        String output = convertStreamToString(in);
+
+        connection.disconnect();
+
+        JSONParser parser = new JSONParser();
+
+        try {
+            return (JSONObject) parser.parse(output);
+        } catch (ParseException e) {
             e.printStackTrace();
             return null;
         }

@@ -3,6 +3,7 @@ package sll.coding.songodaapi;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +38,7 @@ public class Version {
         return (long) data.get("created_at");
     }
 
-    public User getUploadedBy() {
+    public User getUploadedBy() throws IOException {
         String name = (String) data.get("uploaded_by");
         for (User user : User.fromName(name)) {
             if (user.getName().equals(name)) {

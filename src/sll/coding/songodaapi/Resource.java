@@ -3,6 +3,7 @@ package sll.coding.songodaapi;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -18,7 +19,7 @@ public class Resource {
         this.data = data;
     }
 
-    public static List<Resource> fromName(String name) {
+    public static List<Resource> fromName(String name) throws IOException {
         List<Resource> resources = new ArrayList<>();
         JSONObject response = get("/v2/products?filter[name]=" + name + "&per_page=-1");
         assert response != null;
@@ -29,13 +30,13 @@ public class Resource {
         return resources;
     }
 
-    public static Resource fromSlug(String slug) {
+    public static Resource fromSlug(String slug) throws IOException {
         JSONObject response = get("/v2/products/" + slug.toLowerCase());
         assert response != null;
         return new Resource((JSONObject) response.get("data"));
     }
 
-    public static List<Resource> myResources(String apiKey) {
+    public static List<Resource> myResources(String apiKey) throws IOException {
         List<Resource> resources = new ArrayList<>();
         JSONObject response = get("/dashboard/products?token=" + apiKey);
         assert response != null;
@@ -45,7 +46,7 @@ public class Resource {
         return resources;
     }
 
-    public static Resource fromId(long id) {
+    public static Resource fromId(long id) throws IOException {
         JSONObject response = get("/v2/products/id/" + id);
         assert response != null;
         return new Resource((JSONObject) response.get("data"));
@@ -55,7 +56,7 @@ public class Resource {
         return (long) data.get("id");
     }
 
-    public ResourceOwner getOwner() {
+    public ResourceOwner getOwner() throws IOException {
         if (getOwnerType()) {
             return getVersions().get(0).getUploadedBy();
         } else {
@@ -184,7 +185,7 @@ public class Resource {
         return versions;
     }
 
-    public List<Review> getReviewsList() {
+    public List<Review> getReviewsList() throws IOException {
         List<Review> reviewsList = new ArrayList<>();
         JSONObject reviewsRes = get("/products/" + getSlug() + "/reviews");
         assert reviewsRes != null;
@@ -194,32 +195,32 @@ public class Resource {
         return reviewsList;
     }
 
-    public List<Payment> getPayments(String apiKey) {
+    public List<Payment> getPayments(String apiKey) throws IOException {
         return Payment.fromResource(this, apiKey);
     }
 
-    private static JSONObject get(String url) {
+    private static JSONObject get(String url) throws IOException {
+        String baseUrl = "https://songoda.com/api";
+        URL url1 = new URL(baseUrl + url.replaceAll(" ", "%20"));
+        HttpURLConnection connection = (HttpURLConnection) url1.openConnection();
+        connection.setRequestMethod("GET");
+        connection.setRequestProperty("Accept", "application/json");
+        connection.setRequestProperty("User-Agent", "PostmanRuntime/7.24.0");
+
+        if (connection.getResponseCode() != 200) {
+            throw new IOException("Failed: Error code " + connection.getResponseCode());
+        }
+
+        InputStream in = new BufferedInputStream(connection.getInputStream());
+        String output = convertStreamToString(in);
+
+        connection.disconnect();
+
+        JSONParser parser = new JSONParser();
+
         try {
-            String baseUrl = "https://songoda.com/api";
-            URL url1 = new URL(baseUrl + url.replaceAll(" ", "%20"));
-            HttpURLConnection connection = (HttpURLConnection) url1.openConnection();
-            connection.setRequestMethod("GET");
-            connection.setRequestProperty("Accept", "application/json");
-            connection.setRequestProperty("User-Agent", "PostmanRuntime/7.24.0");
-
-            if (connection.getResponseCode() != 200) {
-                throw new IOException("Failed: Error code " + connection.getResponseCode());
-            }
-
-            InputStream in = new BufferedInputStream(connection.getInputStream());
-            String output = convertStreamToString(in);
-
-            connection.disconnect();
-
-            JSONParser parser = new JSONParser();
-
             return (JSONObject) parser.parse(output);
-        } catch (Exception e) {
+        } catch (ParseException e) {
             e.printStackTrace();
             return null;
         }

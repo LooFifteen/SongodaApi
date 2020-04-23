@@ -3,6 +3,7 @@ package sll.coding.songodaapi;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -18,7 +19,7 @@ public class Payment {
         this.data = data;
     }
 
-    public static List<Payment> fromUser(User user, String apiKey) {
+    public static List<Payment> fromUser(User user, String apiKey) throws IOException {
         List<Payment> payments = new ArrayList<>();
         JSONObject response = get("/dashboard/payments?filter[username]=" + user.getName() + "&token=" + apiKey);
         assert response != null;
@@ -29,7 +30,7 @@ public class Payment {
         return payments;
     }
 
-    public static List<Payment> fromResource(Resource resource, String apiKey) {
+    public static List<Payment> fromResource(Resource resource, String apiKey) throws IOException {
         List<Payment> payments = new ArrayList<>();
         JSONObject response = get("/dashboard/payments?filter[product]=" + resource.getName() + "&token=" + apiKey);
         assert response != null;
@@ -48,7 +49,7 @@ public class Payment {
         return (String) data.get("transaction_id");
     }
 
-    public Resource getResource() {
+    public Resource getResource() throws IOException {
         String name = (String) data.get("product");
         List<Resource> resources = Resource.fromName(name);
         for (Resource r : resources) {
@@ -87,7 +88,7 @@ public class Payment {
         return (String) data.get("last_name");
     }
 
-    public User getUser() {
+    public User getUser() throws IOException {
         String username = (String) data.get("username");
         List<User> users = User.fromName(username);
         for (User user : users) {
@@ -110,29 +111,28 @@ public class Payment {
         return "https://songoda.com/payment/receipt/" + getOrderNumber();
     }
 
-    private static JSONObject get(String url) {
-        try {
-            String baseUrl = "https://songoda.com/api";
-            URL url1 = new URL(baseUrl + url.replaceAll(" ", "%20"));
-            HttpURLConnection connection = (HttpURLConnection) url1.openConnection();
-            connection.setRequestMethod("GET");
-            connection.setRequestProperty("Accept", "application/json");
-            connection.setRequestProperty("User-Agent", "PostmanRuntime/7.24.0");
+    private static JSONObject get(String url) throws IOException {
+        String baseUrl = "https://songoda.com/api";
+        URL url1 = new URL(baseUrl + url.replaceAll(" ", "%20"));
+        HttpURLConnection connection = (HttpURLConnection) url1.openConnection();
+        connection.setRequestMethod("GET");
+        connection.setRequestProperty("Accept", "application/json");
+        connection.setRequestProperty("User-Agent", "PostmanRuntime/7.24.0");
 
-            if (connection.getResponseCode() != 200) {
-                throw new IOException("Failed: Error code " + connection.getResponseCode());
-            }
-
-            InputStream in = new BufferedInputStream(connection.getInputStream());
-            String output = convertStreamToString(in);
-
-            connection.disconnect();
-
-            JSONParser parser = new JSONParser();
-
-            return (JSONObject) parser.parse(output);
+        if (connection.getResponseCode() != 200) {
+            throw new IOException("Failed: Error code " + connection.getResponseCode());
         }
-        catch (Exception e) {
+
+        InputStream in = new BufferedInputStream(connection.getInputStream());
+        String output = convertStreamToString(in);
+
+        connection.disconnect();
+
+        JSONParser parser = new JSONParser();
+
+        try {
+            return (JSONObject) parser.parse(output);
+        } catch (ParseException e) {
             e.printStackTrace();
             return null;
         }

@@ -3,6 +3,7 @@ package sll.coding.songodaapi;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,22 +13,25 @@ public class User extends ResourceOwner {
         super(data);
     }
 
-    public static List<User> fromName(String name) {
+    public static List<User> fromName(String name) throws IOException {
         List<User> users = new ArrayList<>();
         JSONObject response = get("/v2/profiles?filter[name]=" + name);
+        assert response != null;
         for (Object u : (JSONArray) response.get("data")) {
             users.add(new User((JSONObject) u));
         }
         return users;
     }
 
-    public static User fromSlug(String slug) {
+    public static User fromSlug(String slug) throws IOException {
         JSONObject response = get("/v2/profiles/" + slug.toLowerCase());
+        assert response != null;
         return new User((JSONObject) response.get("data"));
     }
 
-    public static User fromId(long id) {
+    public static User fromId(long id) throws IOException {
         JSONObject response = get("/v2/profiles/id/" + id);
+        assert response != null;
         return new User((JSONObject) response.get("data"));
     }
 
