@@ -51,7 +51,7 @@ public class Payment {
 
     public Resource getResource() throws IOException {
         String name = (String) data.get("product");
-        List<Resource> resources = Resource.fromName(name, -1);
+        List<Resource> resources = Resource.fromName(name, -1).getResults();
         for (Resource r : resources) {
             if (r.getName().equals(name)) {
                 return r;
@@ -90,7 +90,7 @@ public class Payment {
 
     public User getUser() throws IOException {
         String username = (String) data.get("username");
-        List<User> users = User.fromName(username, -1);
+        List<User> users = User.fromName(username, -1).getResults();
         for (User user : users) {
             if (user.getName().equals(username)) {
                 return user;

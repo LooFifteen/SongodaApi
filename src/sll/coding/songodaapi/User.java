@@ -13,14 +13,14 @@ public class User extends ResourceOwner {
         super(data);
     }
 
-    public static List<User> fromName(String name, int limit) throws IOException {
-        List<User> users = new ArrayList<>();
-        JSONObject response = get("/v2/profiles?filter[name]=" + name + "&per_page=" + limit);
+    public static Users fromName(String name, int limit) throws IOException {
+        return fromName(name, 1, limit);
+    }
+
+    public static Users fromName(String name, int page, int limit) throws IOException {
+        JSONObject response = get("/v2/profiles?filter[name]=" + name + "&per_page=" + limit + "&page=" + page);
         assert response != null;
-        for (Object u : (JSONArray) response.get("data")) {
-            users.add(new User((JSONObject) u));
-        }
-        return users;
+        return new Users(response);
     }
 
     public static User fromSlug(String slug) throws IOException {

@@ -19,15 +19,14 @@ public class Resource {
         this.data = data;
     }
 
-    public static List<Resource> fromName(String name, int limit) throws IOException {
-        List<Resource> resources = new ArrayList<>();
-        JSONObject response = get("/v2/products?filter[name]=" + name + "&per_page=" + limit);
+    public static Resources fromName(String name, int limit) throws IOException {
+        return fromName(name, 1, limit);
+    }
+
+    public static Resources fromName(String name, int page, int limit) throws IOException {
+        JSONObject response = get("/v2/products?filter[name]=" + name + "&per_page=" + limit + "&page=" + page);
         assert response != null;
-        JSONArray array = (JSONArray) response.get("data");
-        for (Object r : array) {
-            resources.add(new Resource((JSONObject) r));
-        }
-        return resources;
+        return new Resources(response);
     }
 
     public static Resource fromSlug(String slug) throws IOException {
@@ -36,14 +35,10 @@ public class Resource {
         return new Resource((JSONObject) response.get("data"));
     }
 
-    public static List<Resource> myResources(String apiKey, int limit) throws IOException {
-        List<Resource> resources = new ArrayList<>();
+    public static Resources myResources(String apiKey, int limit) throws IOException {
         JSONObject response = get("/dashboard/products?token=" + apiKey + "&per_page=" + limit);
         assert response != null;
-        for (Object r : (JSONArray) response.get("data")) {
-            resources.add(new Resource((JSONObject) r));
-        }
-        return resources;
+        return new Resources(response);
     }
 
     public static Resource fromId(long id) throws IOException {
