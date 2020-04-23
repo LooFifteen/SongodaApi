@@ -57,7 +57,7 @@ public class Resource {
 
     public ResourceOwner getOwner() {
         if (getOwnerType()) {
-            return getJars().get(0).getUploadedBy();
+            return getVersions().get(0).getUploadedBy();
         } else {
             return Team.fromId(getOwnerId());
         }
@@ -176,12 +176,12 @@ public class Resource {
         }
     }
 
-    public List<Jar> getJars() {
-        List<Jar> jars = new ArrayList<>();
-        for (Object jar : (JSONArray) data.get("jars")) {
-            jars.add(new Jar((JSONObject) jar));
+    public List<Version> getVersions() {
+        List<Version> versions = new ArrayList<>();
+        for (Object jar : (JSONArray) data.get("versions")) {
+            versions.add(new Version((JSONObject) jar));
         }
-        return jars;
+        return versions;
     }
 
     public List<Review> getReviewsList() {

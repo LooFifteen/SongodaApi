@@ -6,11 +6,11 @@ import org.json.simple.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Jar {
+public class Version {
 
     private final JSONObject data;
 
-    public Jar(JSONObject data) {
+    public Version(JSONObject data) {
         this.data = data;
     }
 
@@ -18,11 +18,11 @@ public class Jar {
         return (long) data.get("id");
     }
 
-    public JarStatus getStatus() {
+    public VersionStatus getStatus() {
         String status = (String) data.get("status");
-        if (status.equalsIgnoreCase("beta")) return JarStatus.BETA;
-        else if (status.equalsIgnoreCase("alpha")) return JarStatus.ALPHA;
-        else return JarStatus.STABLE;
+        if (status.equalsIgnoreCase("beta")) return VersionStatus.BETA;
+        else if (status.equalsIgnoreCase("alpha")) return VersionStatus.ALPHA;
+        else return VersionStatus.STABLE;
     }
 
     public String getVersion() {

@@ -1,6 +1,6 @@
 package sll.coding.songodaapi;
 
-public enum JarStatus {
+public enum VersionStatus {
 
     STABLE("Stable"),
     ALPHA("Alpha"),
@@ -8,7 +8,7 @@ public enum JarStatus {
 
     private final String string;
 
-    JarStatus(String string) {
+    VersionStatus(String string) {
         this.string = string;
     }
 
