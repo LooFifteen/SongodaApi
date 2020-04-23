@@ -2,6 +2,7 @@ package sll.coding.songodaapi;
 
 import org.json.simple.JSONObject;
 
+import java.io.IOException;
 import java.util.List;
 
 public class Review {
@@ -16,7 +17,7 @@ public class Review {
         return (long) data.get("id");
     }
 
-    public User getReviewer() {
+    public User getReviewer() throws IOException {
         List<User> users = User.fromName((String) data.get("reviewer"));
         for (User user : users) {
             if (user.getName().equals(data.get("reviewer"))) {
