@@ -67,6 +67,10 @@ public class User extends ResourceOwner {
         return (boolean) data.get("songoda_plus");
     }
 
+    public String getSongodaPlusRole() {
+        return (String) data.get("songoda_plus_role");
+    }
+
     public List<Post> getPosts() {
         List<Post> posts = new ArrayList<>();
         for (Object p : (JSONArray) data.get("posts")) {
