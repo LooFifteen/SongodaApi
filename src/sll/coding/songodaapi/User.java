@@ -35,10 +35,6 @@ public class User extends ResourceOwner {
         return new User((JSONObject) response.get("data"));
     }
 
-    public String getName() {
-        return (String) data.get("name");
-    }
-
     public boolean isVerified() {
         return (boolean) data.get("verified");
     }

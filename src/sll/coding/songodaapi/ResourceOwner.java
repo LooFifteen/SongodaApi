@@ -23,6 +23,10 @@ public class ResourceOwner {
         return (long) data.get("id");
     }
 
+    public String getName() {
+        return (String) data.get("name");
+    }
+
     public String getSlug() {
         return (String) data.get("slug");
     }
