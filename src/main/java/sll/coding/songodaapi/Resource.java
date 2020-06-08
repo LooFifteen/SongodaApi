@@ -41,7 +41,7 @@ public class Resource {
         return new Resources(response);
     }
 
-    // Removed for some reason but sure?
+    // removed?
     /*public static Resource fromId(long id) throws IOException {
         JSONObject response = get("/v2/products/id/" + id);
         assert response != null;
@@ -52,13 +52,14 @@ public class Resource {
         return (long) data.get("id");
     }
 
-    public ResourceOwner getOwner() throws IOException {
+    // requires getId()
+    /*public ResourceOwner getOwner() throws IOException {
         if (getOwnerType()) {
             return User.fromId(getOwnerId());
         } else {
             return Team.fromId(getOwnerId());
         }
-    }
+    }*/
 
     private long getOwnerId() {
         if (data.get("team_id") == null) {
