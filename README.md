@@ -11,7 +11,7 @@
 ```xml
 <dependency>
   <groupId>sll.coding</groupId>
-  <artifactId>SongodaAPI</groupId>
+  <artifactId>SongodaAPI</artifactId>
   <version>LATEST</version>
 </dependency>
 ```
