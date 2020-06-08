@@ -29,11 +29,12 @@ public class User extends ResourceOwner {
         return new User((JSONObject) response.get("data"));
     }
 
-    public static User fromId(long id) throws IOException {
+    // Removed for some reason but sure i guess?
+    /*public static User fromId(long id) throws IOException {
         JSONObject response = get("/v2/profiles/id/" + id);
         assert response != null;
         return new User((JSONObject) response.get("data"));
-    }
+    }*/
 
     public boolean isVerified() {
         return (boolean) data.get("verified");

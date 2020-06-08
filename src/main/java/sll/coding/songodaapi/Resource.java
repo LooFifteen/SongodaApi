@@ -41,11 +41,12 @@ public class Resource {
         return new Resources(response);
     }
 
-    public static Resource fromId(long id) throws IOException {
+    // Removed for some reason but sure?
+    /*public static Resource fromId(long id) throws IOException {
         JSONObject response = get("/v2/products/id/" + id);
         assert response != null;
         return new Resource((JSONObject) response.get("data"));
-    }
+    }*/
 
     public long getId() {
         return (long) data.get("id");
