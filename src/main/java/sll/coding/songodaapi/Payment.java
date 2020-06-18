@@ -32,7 +32,7 @@ public class Payment {
 
     public static List<Payment> fromResource(Resource resource, String apiKey, int limit) throws IOException {
         List<Payment> payments = new ArrayList<>();
-        JSONObject response = get("/dashboard/payments?filter[product]=" + resource.getName() + "&token=" + apiKey + "&per_page=" + limit);
+        JSONObject response = get("/dashboard/products/" + resource.getSlug() + "/payments?token=" + apiKey + "&per_page=" + limit);
         assert response != null;
         JSONArray array = (JSONArray) response.get("data");
         for (Object p : array) {
