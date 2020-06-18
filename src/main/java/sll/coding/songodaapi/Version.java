@@ -68,16 +68,16 @@ public class Version {
         return (String) data.get("download");
     }
 
-    public String getChangelogPlain() {
-        return (String) ((JSONObject) data.get("changlog")).get("plain");
-    }
-
-    public String getChangelogBBCode() {
-        return (String) ((JSONObject) data.get("changlog")).get("bbcode");
-    }
-
-    public String getChangelogHTML() {
-        return (String) ((JSONObject) data.get("changlog")).get("html");
+    public String getChangelog(ChangelogType type) {
+        if (type.equals(ChangelogType.BBCODE)) {
+            return (String) ((JSONObject) data.get("changelog")).get("bbcode");
+        }
+        else if (type.equals(ChangelogType.HTML)) {
+            return (String) ((JSONObject) data.get("changelog")).get("html");
+        }
+        else {
+            return (String) ((JSONObject) data.get("changelog")).get("plain");
+        }
     }
 
 }
