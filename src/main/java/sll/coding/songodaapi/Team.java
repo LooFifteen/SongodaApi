@@ -29,12 +29,11 @@ public class Team extends ResourceOwner {
         return new Team((JSONObject) response.get("data"));
     }
 
-    // removed for this too?
-    /*public static Team fromId(long id) throws IOException {
+    public static Team fromId(long id) throws IOException {
         JSONObject response = get("/v2/teams/id/" + id);
         assert response != null;
         return new Team((JSONObject) response.get("data"));
-    }*/
+    }
 
     public User getOwner() throws IOException {
         return User.fromSlug((String) ((JSONObject) data.get("owner")).get("slug"));

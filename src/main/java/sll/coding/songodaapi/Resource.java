@@ -39,25 +39,23 @@ public class Resource extends Searchable {
         return new SearchResults<>(Resource.class, response);
     }
 
-    // removed?
-    /*public static Resource fromId(long id) throws IOException {
+    public static Resource fromId(long id) throws IOException {
         JSONObject response = get("/v2/products/id/" + id);
         assert response != null;
         return new Resource((JSONObject) response.get("data"));
-    }*/
+    }
 
     public long getId() {
         return (long) data.get("id");
     }
 
-    // requires getId()
-    /*public ResourceOwner getOwner() throws IOException {
+    public ResourceOwner getOwner() throws IOException {
         if (getOwnerType()) {
             return User.fromId(getOwnerId());
         } else {
             return Team.fromId(getOwnerId());
         }
-    }*/
+    }
 
     private long getOwnerId() {
         if (data.get("team_id") == null) {
