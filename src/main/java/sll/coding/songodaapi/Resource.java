@@ -197,6 +197,18 @@ public class Resource extends Searchable {
         return Payment.fromResource(this, apiKey, -1);
     }
 
+    public PaymentMethod getPaymentMethod() {
+        String method = (String) data.get("payment_method");
+        switch (method) {
+            case("Patreon"):
+                return PaymentMethod.PATREON;
+            case("PayPal"):
+                return PaymentMethod.PAYPAL;
+            default:
+                return PaymentMethod.UNKNOWN;
+        }
+    }
+
     private static JSONObject get(String url) throws IOException {
         String baseUrl = "https://songoda.com/api";
         URL url1 = new URL(baseUrl + url.replaceAll(" ", "%20"));
