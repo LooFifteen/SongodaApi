@@ -1,21 +1,31 @@
 package sll.coding.songodaapi;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
-public class SearchResults {
+public class SearchResults<T extends Searchable> {
 
+    private final JSONArray data;
     private final JSONObject links;
     private final JSONObject meta;
 
-    public SearchResults(JSONObject links, JSONObject meta) {
-        this.links = links;
-        this.meta = meta;
+    private final Class<T> type;
+
+    public SearchResults(Class<T> type, JSONObject data) {
+        this.type = type;
+
+        this.data = (JSONArray) data.get("data");
+        this.links = (JSONObject) data.get("links");
+        this.meta = (JSONObject) data.get("meta");
     }
 
     public String getFirstPageUrl() {
@@ -62,10 +72,28 @@ public class SearchResults {
         return (int) ((long) meta.get("total"));
     }
 
-    public SearchResults nextPage() throws IOException {
+    public List<T> getResults() {
+        List<T> results = new ArrayList<>();
+        for (Object o : data) {
+            try {
+                results.add(type.getDeclaredConstructor(JSONObject.class).newInstance(o));
+            } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+                e.printStackTrace();
+            }
+        }
+        return results;
+    }
+
+    public SearchResults<T> nextPage() throws IOException {
         JSONObject response = get(getNextPageUrl());
         assert response != null;
-        return new SearchResults((JSONObject) response.get("links"), (JSONObject) response.get("meta"));
+        return new SearchResults<>(type, response);
+    }
+
+    public SearchResults<T> previousPage() throws IOException {
+        JSONObject response = get(getPreviousPageUrl());
+        assert response != null;
+        return new SearchResults<>(type, response);
     }
 
     static JSONObject get(String url) throws IOException {

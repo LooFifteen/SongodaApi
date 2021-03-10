@@ -13,6 +13,16 @@ public class Team extends ResourceOwner {
         super(data);
     }
 
+    public static SearchResults<Team> fromName(String name, int limit) throws IOException {
+        return fromName(name, 1, limit);
+    }
+
+    public static SearchResults<Team> fromName(String name, int page, int limit) throws IOException {
+        JSONObject response = get("/v2/teams?filter[name]=" + name + "&per_page=" + limit + "&page=" + page);
+        assert response != null;
+        return new SearchResults<>(Team.class, response);
+    }
+
     public static Team fromSlug(String slug) throws IOException {
         JSONObject response = get("/v2/teams/" + slug);
         assert response != null;

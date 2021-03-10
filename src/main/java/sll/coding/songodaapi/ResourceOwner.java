@@ -11,12 +11,10 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ResourceOwner {
-
-    protected final JSONObject data;
+public class ResourceOwner extends Searchable {
 
     protected ResourceOwner(JSONObject data) {
-        this.data = data;
+        super(data);
     }
 
     public long getId() {
