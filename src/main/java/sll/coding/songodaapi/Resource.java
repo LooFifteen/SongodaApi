@@ -138,10 +138,15 @@ public class Resource extends Searchable {
     }
 
     public ResourceStatus getStatus() {
+        if (!isApproved()) return ResourceStatus.DECLINED;
         String s = (String) data.get("status");
         if (s.equals("approved")) return ResourceStatus.APPROVED;
         else if (s.equals("pending")) return ResourceStatus.PENDING;
         else return ResourceStatus.DECLINED;
+    }
+
+    public boolean isApproved() {
+        return (boolean) data.get("approved");
     }
 
     public String getUrl() {
